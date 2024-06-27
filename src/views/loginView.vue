@@ -1,0 +1,118 @@
+<template>
+    <div class="login-page">
+        <el-card class="box-card" :body-style="{ backgroundColor: 'transparent', padding: '20px' }">
+            <div slot="header" class="clearfix">
+                <span class="login-title">欢迎来到壹番日语学习平台</span>
+            </div>
+            <div class="login-form">
+                <el-form :model="form" :rules="loginRules" ref="loginForm">
+                    <el-form-item prop="username">
+                        <el-input type="text" v-model="form.username" auto-complete="off" placeholder="请输入用户名">
+                            <template slot="prepend"><i style="font-size:20px" class="el-icon-user"></i></template>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item prop="password">
+                        <el-input type="password" v-model="form.password" auto-complete="off" placeholder="请输入密码">
+                            <template slot="prepend"><i style="font-size:20px" class="el-icon-key"></i></template>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button style="width:100%;" type="primary" @click="handleLogin"
+                            :loading="loading">登录</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <p class="forget">没有账户?<a href="http://localhost:7001/#/zhuce">
+                                注册
+                            </a></p>
+                    </el-form-item>
+                </el-form>
+            </div>
+        </el-card>
+        <!-- <div class="index">
+            <iframe src="../../public/html/index.html"></iframe>
+        </div> -->
+    </div>
+
+    
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+    name: 'IndexView',
+    data() {
+        return {
+            loading: false,
+            form: {
+                username: '',
+                password: ''
+            },
+            loginRules: {
+                username: [
+                    { required: true, message: '请输入账户', trigger: 'blur' },
+                ],
+                password: [
+                    { required: true, message: '请输入密码', trigger: 'blur' }
+                ]
+            }
+        }
+    },
+    methods: {
+        handleLogin() {
+            axios({
+                url: '/api/user/chaxun',
+                method: 'post',
+                data: {
+                    username: this.form.username,
+                    password: this.form.password
+                }
+            }).then(res => {
+                if(res.data.message=="用户名或密码错误"){
+                    alert("登录失败，请重试")
+                }else{
+                    alert("登录成功")
+                    window.open('index1.html');
+                }
+            }
+            ).catch(() => {
+                /* console.log(err) */
+                alert("登录失败,用户名或密码错误！")
+            })
+        }
+    }
+}
+
+</script>
+
+<style scoped>
+.login-page {
+    background: url("../assets/tupian/IMG_20240421_105743.png") no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-title {
+    font-size: 20px;
+}
+
+.box-card {
+    width: 375px;
+    border: none;
+    box-shadow: none;
+}
+
+.router-link-active {
+    text-decoration: none;
+    color: rgb(20, 20, 20);
+}
+
+a {
+    text-decoration: none;
+    color: rgb(12, 12, 12);
+}
+
+</style>
